@@ -1,31 +1,37 @@
 #include "Socket.h"
+#include <iostream>
 
-Socket::Socket(qintptr socketDescriptor){
+Socket::Socket(const qintptr socketDescriptor){
     this->setSocketDescriptor(socketDescriptor);
 }
 
 Socket::~Socket(){}
 
-void Socket::sendMassage(Message message){
+void Socket::sendMessage(const Message& message){
     this->write((message.m_name + ":" + message.m_text).data());
     this->flush();
-    this->waitForBytesWritten(500);
 }
 
 Message Socket::receiveMessage(){
-    std::string m_name, m_text;
+    std::string name, text;
 
     if(this->state() != QAbstractSocket::UnconnectedState && this->waitForReadyRead(500)){
-        std::string s_message = this->readAll().constData();
+        std::string message = this->readAll().constData();
 
-        int pos = s_message.find(":");
-        m_name = s_message.substr(0, pos);
-        s_message.erase(0, pos + 1);
+        if(message.length() == 0){
+            throw std::runtime_error("empty message");
+        }
 
-        m_text = s_message;
+        const size_t pos = message.find(":");
+        name = message.substr(0, pos);
+        text = message.substr(pos + 1);
     }
 
-    return Message{m_name, m_text};
+    else{
+        throw std::runtime_error("can't read message");
+    }
+
+    return Message{name, text};
 }
 
 void Socket::closeSocket(){

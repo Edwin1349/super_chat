@@ -1,5 +1,5 @@
-#ifndef MASSAGE_H
-#define MASSAGE_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <string>
 
@@ -8,4 +8,4 @@ struct Message{
     std::string m_text;
 };
 
-#endif // MASSAGE_H
+#endif // MESSAGE_H

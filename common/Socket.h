@@ -4,12 +4,12 @@
 #include "Message.h"
 #include <QTcpSocket>
 
-class Socket : public QTcpSocket{
+class Socket : private QTcpSocket{
 public:
-    Socket(qintptr socketDescriptor);
+    Socket(const qintptr socketDescriptor);
     ~Socket();
 
-    void sendMassage(Message message);
+    void sendMessage(const Message& message);
     Message receiveMessage();
 
     void closeSocket();
